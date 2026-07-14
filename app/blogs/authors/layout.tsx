@@ -7,7 +7,7 @@ const AuthorsLayout = ({
 }) => {
     return (
         <div>
-            Authors Layout is special only for authors route or nested routes the authors directory.
+            Author Layout is special only for authors route or nested routes inside the authors directory.
 
             {children}
         </div>

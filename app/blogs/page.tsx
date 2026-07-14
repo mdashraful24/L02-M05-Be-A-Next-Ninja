@@ -1,11 +1,15 @@
-import React from 'react'
+const BlogsPage = async () => {
+  const posts = await fetch("https://jsonplaceholder.typicode.com/posts");
 
-const BlogsPage = () => {
-    return (
-        <div>
-            Blogs Page
-        </div>
-    )
+  const postData = await posts.json();
+
+  console.log(postData);
+
+  return (
+    <div>
+      Blogs Page
+    </div>
+  )
 }
 
 export default BlogsPage

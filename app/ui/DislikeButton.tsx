@@ -7,8 +7,8 @@ const DislikeButton = ({
 }) => {
     return (
         <button onClick={() => {
-            console.log("Dislike button clicked for blog: ", blogSlug)
-        }}>Dislike</button>
+            console.log("Dislike button clicked for blog: ", blogSlug);
+        }}>Dislike {blogSlug}</button>
     )
 }
 
