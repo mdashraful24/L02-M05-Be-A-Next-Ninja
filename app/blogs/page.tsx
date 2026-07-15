@@ -1,15 +1,29 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// import { cacheLife,cacheTag } from "next/cache";
+import { getBlogs } from "../service/getBlogs";
 import MyServerComponent from "../ui/MyServerComponent";
 
 const BlogsPage = async () => {
-  const posts = await fetch("https://jsonplaceholder.typicode.com/posts");
+  // "use cache";
+  // cacheLife("hours");
+  // cacheTag("posts");
 
-  const postData = await posts.json();
+  const blogs = await getBlogs();
 
-  console.log(postData);
+  console.log(blogs);
 
   return (
     <div>
       Blogs Page
+
+      {
+        blogs.map((blog: any) => (
+          <div key={blog.id}>
+            <h2>{blog.title}</h2>
+            <p>{blog.content}</p>
+          </div>
+        ))
+      }
 
       <MyServerComponent />
     </div>
