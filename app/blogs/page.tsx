@@ -1,3 +1,5 @@
+import MyServerComponent from "../ui/MyServerComponent";
+
 const BlogsPage = async () => {
   const posts = await fetch("https://jsonplaceholder.typicode.com/posts");
 
@@ -8,6 +10,8 @@ const BlogsPage = async () => {
   return (
     <div>
       Blogs Page
+
+      <MyServerComponent />
     </div>
   )
 }
