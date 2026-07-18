@@ -9,8 +9,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { logout } from '@/service/logout';
 import { LogOut, Settings, User } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 // Navigation items configuration
 const navItems = [
@@ -77,9 +81,17 @@ type NavbarProps = {
 }
 
 export function Navbar({ user }: NavbarProps) {
-    const handleLogout = () => {
-        console.log('Logging out...');
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const handleLogout = async (action: string) => {
         // Add your logout logic here
+
+        if (action === "logout") {
+            await logout();
+            toast.success("User logged out successfully");
+            router.push("/login");
+        }
     };
 
     return (
@@ -95,7 +107,7 @@ export function Navbar({ user }: NavbarProps) {
                     {navItems.map((item) => (
                         <Button
                             key={item.label}
-                            variant="ghost"
+                            variant={pathname === item.href ? "default" : "ghost"}
                             asChild
                         >
                             <a href={item.href}>{item.label}</a>
@@ -104,43 +116,65 @@ export function Navbar({ user }: NavbarProps) {
                 </div>
 
                 {/* User Dropdown */}
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="size-10 rounded-full cursor-pointer"
-                        >
-                            <div className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                                <span>U</span>
-                            </div>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56">
-                        <DropdownMenuLabel className="font-normal">
-                            <div className="flex flex-col space-y-1">
-                                <p className="text-sm font-medium leading-none">{user?.data?.name}</p>
-                                <p className="text-xs leading-none text-muted-foreground">
-                                    {user?.data?.email}
-                                </p>
-                            </div>
-                        </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {userMenuItems.map((item) => (
-                            <DropdownMenuItem key={item.label} asChild>
-                                <a href={item.href} className="flex cursor-pointer items-center gap-2">
-                                    <item.icon className="size-4" />
-                                    <span>{item.label}</span>
-                                </a>
-                            </DropdownMenuItem>
-                        ))}
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={handleLogout}>
-                            <LogOut className="size-4" />
-                            <span>Logout</span>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                {
+                    user.success ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="size-10 rounded-full cursor-pointer"
+                                >
+                                    <div className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                                        <span>U</span>
+                                    </div>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56">
+                                <DropdownMenuLabel className="font-normal">
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium leading-none">{user?.data?.name}</p>
+                                        <p className="text-xs leading-none text-muted-foreground">
+                                            {user?.data?.email}
+                                        </p>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                {userMenuItems.map((item) => (
+                                    <DropdownMenuItem key={item.label} asChild>
+                                        <a href={item.href} className="flex cursor-pointer items-center gap-2">
+                                            <item.icon className="size-4" />
+                                            <span>{item.label}</span>
+                                        </a>
+                                    </DropdownMenuItem>
+                                ))}
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={async () => {
+                                    await handleLogout("logout");
+                                }}>
+                                    <LogOut className="size-4" />
+                                    <span>Logout</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <div className="flex gap-2">
+                            <Button
+                                asChild
+                                variant={pathname === "/login" ? "default" : "outline"}
+                            >
+                                <Link href="/login">Login</Link>
+                            </Button>
+
+                            <Button
+                                asChild
+                                variant={pathname === "/register" ? "default" : "outline"}
+                            >
+                                <Link href="/register">Register</Link>
+                            </Button>
+                        </div>
+                    )
+                }
             </div>
         </nav>
     );
