@@ -26,7 +26,57 @@ const userMenuItems = [
     { label: 'Settings', icon: Settings, href: '/settings' },
 ];
 
-export function Navbar() {
+/**
+{
+    "success": true,
+    "message": "User profile fetched successfully",
+    "data": {
+        "id": "4596406a-2f0d-40af-843a-a504f5cba662",
+        "name": "Mr. Admin",
+        "email": "olivia.martinez@example.com",
+        "activeStatus": "ACTIVE",
+        "role": "USER",
+        "createdAt": "2026-07-17T18:49:24.444Z",
+        "updatedAt": "2026-07-17T18:49:24.444Z",
+        "profile": {
+            "id": "e3ac6cc4-e8f7-4963-a7f6-45f5396d9eaa",
+            "profilePhoto": "https://randomuser.me/api/portraits/women/6.jpg",
+            "bio": "MERN stack developer",
+            "userId": "4596406a-2f0d-40af-843a-a504f5cba662",
+            "createdAt": "2026-07-17T18:49:24.444Z",
+            "updatedAt": "2026-07-17T18:49:24.444Z"
+        }
+    }
+}
+ */
+
+type IUser = {
+    success: boolean,
+    message: string,
+    data: {
+        id: string,
+        name: string,
+        email: string,
+        activeStatus: string,
+        role: string,
+        createdAt: string,
+        updatedAt: string,
+        profile: {
+            id: string,
+            profilePhoto: string,
+            bio: string,
+            userId: string,
+            createdAt: string,
+            updatedAt: string
+        }
+    }
+}
+
+type NavbarProps = {
+    user: IUser
+}
+
+export function Navbar({ user }: NavbarProps) {
     const handleLogout = () => {
         console.log('Logging out...');
         // Add your logout logic here
@@ -64,14 +114,14 @@ export function Navbar() {
                             <div className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
                                 <span>U</span>
                             </div>
-                        </Button>   
+                        </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
                         <DropdownMenuLabel className="font-normal">
                             <div className="flex flex-col space-y-1">
-                                <p className="text-sm font-medium leading-none">Your Name</p>
+                                <p className="text-sm font-medium leading-none">{user?.data?.name}</p>
                                 <p className="text-xs leading-none text-muted-foreground">
-                                    your.email@example.com
+                                    {user?.data?.email}
                                 </p>
                             </div>
                         </DropdownMenuLabel>
