@@ -59,4 +59,47 @@ export const loginAction = async (prevState: LoginState, formData: FormData) => 
     }
 
     return result;
+};
+
+
+type RegisterState = {
+    success: true,
+    statusCode: number,
+    message: string,
+} | {
+    success: false,
+    statusCode: number,
+    message: string,
+    name: string
 }
+
+export const registerAction = async (prevState: RegisterState, formData: FormData) => {
+    console.log(formData);
+    console.log(prevState, "prev");
+
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const password = formData.get("password");
+
+    const payload = {
+        name,
+        email,
+        password
+    };
+
+    const res = await fetch(`${process.env.BACKEND_API_URL}/api/users/register`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+        redirect("/login", "replace");
+    }
+
+    return result;
+};

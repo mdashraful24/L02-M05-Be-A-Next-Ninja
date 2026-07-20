@@ -20,10 +20,10 @@ export const getMe = async () => {
         // method: "GET",
         headers: {
             // Authorization: accessToken as unknown as string
-            Authorization: `${accessToken}`
+            // Authorization: `${accessToken}`
             // Authorization: `Bearer ${accessToken}`
 
-            // cookie: `accessToken=${accessToken}`
+            cookie: `accessToken=${accessToken}`
         },
 
         cache: "force-cache",

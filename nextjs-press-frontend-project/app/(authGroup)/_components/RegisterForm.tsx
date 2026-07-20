@@ -1,17 +1,33 @@
 "use client";
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { useActionState, useEffect } from 'react';
+import { registerAction } from '../_actions/authActions';
+import { toast } from 'sonner';
 
 const RegisterForm = () => {
+    const [state, action, pending] = useActionState(registerAction, false);
+
+    useEffect(() => {
+        if (!state) return;
+
+        if (!state.success) {
+            toast.error(state.message || "Registration Failed");
+        }
+    }, [state]);
+
     return (
-        <form className='space-y-4'>
+        <form action={action} className='space-y-4'>
             <Card className='p-5 space-y-4'>
                 <Input name='name' type='text' placeholder='Enter your full name' />
                 <Input name='email' type='email' placeholder='Enter your email' />
                 <Input name='password' type='password' placeholder='Enter your password' />
-                <Button type='submit' className='w-full'>
-                    Register Now
+                <Button type='submit'>
+                    {
+                        pending ? "Submitting..." : "Register Now"
+                    }
                 </Button>
             </Card>
         </form>
