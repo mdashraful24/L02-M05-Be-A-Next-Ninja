@@ -13,7 +13,6 @@ import { logout } from '@/service/logout';
 import { LogOut, Settings, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 // Navigation items configuration
@@ -133,9 +132,9 @@ export function Navbar({ user }: NavbarProps) {
                             <DropdownMenuContent align="end" className="w-56">
                                 <DropdownMenuLabel className="font-normal">
                                     <div className="flex flex-col space-y-1">
-                                        <p className="text-sm font-medium leading-none">{user?.data?.name}</p>
+                                        <p className="text-sm font-medium leading-none">{user?.data?.name || "User Name"}</p>
                                         <p className="text-xs leading-none text-muted-foreground">
-                                            {user?.data?.email}
+                                            {user?.data?.email || "User Email"}
                                         </p>
                                     </div>
                                 </DropdownMenuLabel>
