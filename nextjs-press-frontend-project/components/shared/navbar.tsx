@@ -93,6 +93,8 @@ export function Navbar({ user }: NavbarProps) {
         }
     };
 
+    // console.log("Navbar User:", user);
+
     return (
         <nav className="border-b border-border">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -119,22 +121,21 @@ export function Navbar({ user }: NavbarProps) {
                     user.success ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="size-10 rounded-full cursor-pointer"
-                                >
-                                    <div className="flex size-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                                        <span>U</span>
+                                <div className="cursor-pointer">
+                                    <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                        <User className="size-5 text-primary" />
                                     </div>
-                                </Button>
+                                </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-56">
                                 <DropdownMenuLabel className="font-normal">
-                                    <div className="flex flex-col space-y-1">
-                                        <p className="text-sm font-medium leading-none">{user?.data?.name || "User Name"}</p>
-                                        <p className="text-xs leading-none text-muted-foreground">
+                                    <div className="flex flex-col gap-1.5">
+                                        <p className="text-sm font-medium text-black leading-none">{user?.data?.name || "User Name"}</p>
+                                        <p className="text-xs leading-none text-gray-600">
                                             {user?.data?.email || "User Email"}
+                                        </p>
+                                        <p className="text-xs leading-none text-gray-600">
+                                            {user?.data?.role || "User Role"}
                                         </p>
                                     </div>
                                 </DropdownMenuLabel>
