@@ -30,13 +30,13 @@ export async function proxy(request: NextRequest) {
     const decodedRefreshToken = refreshToken ? jwtUtils.verifyToken(refreshToken, process.env.JWT_REFRESH_SECRET as string) : null;
 
     if (!decodedAccessToken?.success && decodedRefreshToken?.success) {
-        console.log("refresh token is valid");
+        // console.log("refresh token is valid");
         // access token has expired and refresh token is valid
         const result = await getNewAccessToken();
-        console.log(result);
+        // console.log(result);
 
         if (result.success) {
-            console.log("new access token received")
+            // console.log("new access token received");
             const newAccessToken = result.data.accessToken;
 
             cookieStore.set("accessToken", newAccessToken, {
