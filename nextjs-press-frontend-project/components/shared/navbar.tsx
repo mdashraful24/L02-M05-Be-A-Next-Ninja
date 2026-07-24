@@ -17,14 +17,14 @@ import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 // Navigation items configuration
-const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-    { label: 'Services', href: '/services' },
-    { label: 'Contact', href: '/contact' },
-    { label: 'News', href: '/news' },
-    { label: 'Premium', href: '/premium' },
-];
+// const navItems = [
+//     { label: 'Home', href: '/' },
+//     { label: 'About', href: '/about' },
+//     { label: 'Services', href: '/services' },
+//     { label: 'Contact', href: '/contact' },
+//     { label: 'News', href: '/news' },
+//     { label: 'Premium', href: '/premium' },
+// ];
 
 // User dropdown options
 const userMenuItems = [
@@ -40,9 +40,41 @@ export function Navbar({ user }: NavbarProps) {
     const router = useRouter();
     const pathname = usePathname();
 
-    const handleLogout = async (action: string) => {
-        // Add your logout logic here
+    // User Role
+    const role = user?.data?.role;
 
+    // Dashboard Item
+    const dashboardItem =
+        role === "USER"
+            ? {
+                label: "Dashboard",
+                href: "/dashboard",
+            }
+            : role === "AUTHOR"
+                ? {
+                    label: "Author Dashboard",
+                    href: "/author-dashboard",
+                }
+                : role === "ADMIN"
+                    ? {
+                        label: "Admin Dashboard",
+                        href: "/admin-dashboard",
+                    }
+                    : null;
+
+    // Navigation items configuration
+    const navItems = [
+        { label: "Home", href: "/" },
+        { label: "About", href: "/about" },
+        { label: "Services", href: "/services" },
+        { label: "Contact", href: "/contact" },
+        { label: "News", href: "/news" },
+        { label: "Premium", href: "/premium" },
+        ...(dashboardItem ? [dashboardItem] : []),
+    ];
+
+    // Add your logout logic here
+    const handleLogout = async (action: string) => {
         if (action === "logout") {
             await logout();
             toast.success("User logged out successfully");
