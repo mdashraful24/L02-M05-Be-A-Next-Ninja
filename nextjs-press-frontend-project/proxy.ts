@@ -113,7 +113,7 @@ export async function proxy(request: NextRequest) {
 
         const isActive = Boolean(subscriptionStatus?.success && subscriptionStatus.data?.isSubscribed);
 
-        if (!isActive) {
+        if (isActive) {
             return NextResponse.redirect(new URL('/premium', request.url));
         }
     }

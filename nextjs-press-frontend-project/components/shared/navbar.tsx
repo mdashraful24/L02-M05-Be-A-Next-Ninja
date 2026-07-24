@@ -9,6 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { IUser } from '@/lib/types';
 import { logout } from '@/service/logout';
 import { LogOut, Settings, User } from 'lucide-react';
 import Link from 'next/link';
@@ -30,28 +31,6 @@ const userMenuItems = [
     { label: 'Profile', icon: User, href: '/profile' },
     { label: 'Settings', icon: Settings, href: '/settings' },
 ];
-
-type IUser = {
-    success: boolean,
-    message: string,
-    data: {
-        id: string,
-        name: string,
-        email: string,
-        activeStatus: string,
-        role: string,
-        createdAt: string,
-        updatedAt: string,
-        profile: {
-            id: string,
-            profilePhoto: string,
-            bio: string,
-            userId: string,
-            createdAt: string,
-            updatedAt: string
-        }
-    }
-}
 
 type NavbarProps = {
     user: IUser
@@ -105,34 +84,84 @@ export function Navbar({ user }: NavbarProps) {
                                     </div>
                                 </div>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-56">
-                                <DropdownMenuLabel className="font-normal">
-                                    <div className="flex flex-col gap-1.5">
-                                        <p className="text-sm font-medium text-black leading-none">{user?.data?.name || "User Name"}</p>
-                                        <p className="text-xs leading-none text-gray-600">
-                                            {user?.data?.email || "User Email"}
-                                        </p>
-                                        <p className="text-xs leading-none text-gray-600">
-                                            {user?.data?.role || "User Role"}
-                                        </p>
+                            <DropdownMenuContent
+                                align="end"
+                                className="w-72 overflow-hidden rounded-2xl border bg-background p-0 shadow-xl"
+                            >
+                                {/* User Header */}
+                                <div className="bg-linear-to-r from-primary/15 via-primary/10 to-primary/5 p-5">
+                                    <div className="flex items-center gap-3">
+                                        <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                                            <User className="size-6" />
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <h4 className="font-semibold text-sm">
+                                                {user?.data?.name || "User Name"}
+                                            </h4>
+
+                                            <p className="text-xs text-muted-foreground">
+                                                {user?.data?.email || "user@email.com"}
+                                            </p>
+
+                                            <div className="mt-2 flex items-center gap-2">
+                                                <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium">
+                                                    {user?.data?.role || "User"}
+                                                </span>
+
+                                                {user?.data?.subscriptions?.status === "ACTIVE" && (
+                                                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                                                        ✨ Premium
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                {userMenuItems.map((item) => (
-                                    <DropdownMenuItem key={item.label} asChild>
-                                        <a href={item.href} className="flex cursor-pointer items-center gap-2">
-                                            <item.icon className="size-4" />
-                                            <span>{item.label}</span>
-                                        </a>
+
+                                    {user?.data?.subscriptions?.status === "ACTIVE" && (
+                                        <div className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 shadow p-3">
+                                            <p className="text-xs font-medium text-emerald-700">
+                                                Premium Membership
+                                            </p>
+
+                                            <p className="mt-1 text-xs">
+                                                Renews on{" "}
+                                                {new Date(
+                                                    user?.data?.subscriptions?.currentPeriodEnd
+                                                ).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Menu Items */}
+                                <div className="p-2">
+                                    {userMenuItems.map((item) => (
+                                        <DropdownMenuItem
+                                            key={item.label}
+                                            asChild
+                                            className="rounded-lg"
+                                        >
+                                            <Link
+                                                href={item.href}
+                                                className="flex items-center gap-3"
+                                            >
+                                                <item.icon className="size-4" />
+                                                <span>{item.label}</span>
+                                            </Link>
+                                        </DropdownMenuItem>
+                                    ))}
+
+                                    <DropdownMenuSeparator />
+
+                                    <DropdownMenuItem
+                                        onClick={() => handleLogout("logout")}
+                                        className="rounded-lg text-red-500 focus:text-red-500"
+                                    >
+                                        <LogOut className="size-4" />
+                                        <span>Logout</span>
                                     </DropdownMenuItem>
-                                ))}
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={async () => {
-                                    await handleLogout("logout");
-                                }}>
-                                    <LogOut className="size-4" />
-                                    <span>Logout</span>
-                                </DropdownMenuItem>
+                                </div>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
