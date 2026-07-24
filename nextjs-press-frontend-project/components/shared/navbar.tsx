@@ -121,23 +121,23 @@ export function Navbar({ user }: NavbarProps) {
                             >
                                 <DropdownMenuLabel>
                                     {/* User Header */}
-                                    <div className="bg-linear-to-r from-primary/15 via-primary/10 to-primary/5 p-5">
+                                    <div className="bg-linear-to-r from-primary/15 via-primary/10 to-primary/5 rounded-xl p-5">
                                         <div className="flex items-center gap-3">
                                             <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
                                                 <User className="size-6" />
                                             </div>
 
                                             <div className="flex-1">
-                                                <h4 className="font-semibold text-sm">
+                                                <h4 className="font-semibold text-sm text-accent-foreground">
                                                     {user?.data?.name || "User Name"}
                                                 </h4>
 
-                                                <p className="text-xs text-muted-foreground">
+                                                <p className="text-xs text-gray-700">
                                                     {user?.data?.email || "user@email.com"}
                                                 </p>
 
                                                 <div className="mt-2 flex items-center gap-2">
-                                                    <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium">
+                                                    <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-gray-700">
                                                         {user?.data?.role || "User"}
                                                     </span>
 
@@ -167,12 +167,12 @@ export function Navbar({ user }: NavbarProps) {
                                     </div>
 
                                     {/* Menu Items */}
-                                    <div className="p-2">
+                                    <div className="py-2">
                                         {userMenuItems.map((item) => (
                                             <DropdownMenuItem
                                                 key={item.label}
                                                 asChild
-                                                className="rounded-lg"
+                                                className="text-accent-foreground rounded-lg"
                                             >
                                                 <Link
                                                     href={item.href}
