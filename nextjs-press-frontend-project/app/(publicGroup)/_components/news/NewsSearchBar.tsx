@@ -38,7 +38,7 @@ export function NewsSearchBar() {
             }
 
             router.replace(`${pathName}?${params.toString()}`);
-        }, 1000);
+        }, 500);
     }
 
     return (

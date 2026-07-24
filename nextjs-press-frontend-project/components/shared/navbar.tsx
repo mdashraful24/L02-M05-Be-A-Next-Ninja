@@ -42,25 +42,22 @@ export function Navbar({ user }: NavbarProps) {
 
     // User Role
     const role = user?.data?.role;
+    const isPremium = user?.data?.subscriptions?.status === "ACTIVE";
 
     // Dashboard Item
     const dashboardItem =
-        role === "USER"
-            ? {
-                label: "Dashboard",
-                href: "/dashboard",
-            }
-            : role === "AUTHOR"
-                ? {
-                    label: "Author Dashboard",
-                    href: "/author-dashboard",
-                }
-                : role === "ADMIN"
-                    ? {
-                        label: "Admin Dashboard",
-                        href: "/admin-dashboard",
-                    }
+        role === "USER" ? { label: "Dashboard", href: "/dashboard", }
+            : role === "AUTHOR" ? { label: "Author Dashboard", href: "/author-dashboard", }
+                : role === "ADMIN" ? { label: "Admin Dashboard", href: "/admin-dashboard" }
                     : null;
+
+    // Premium based menu item
+    const contentItems = isPremium ? [
+        { label: "Premium", href: "/premium", },
+    ] : [
+        // { label: "Content", href: "/posts", },
+        { label: "Premium", href: "/premium", },
+    ];
 
     // Navigation items configuration
     const navItems = [
@@ -69,7 +66,9 @@ export function Navbar({ user }: NavbarProps) {
         { label: "Services", href: "/services" },
         { label: "Contact", href: "/contact" },
         { label: "News", href: "/news" },
-        { label: "Premium", href: "/premium" },
+        // Premium based menu item
+        ...contentItems,
+        // Dashboard Item
         ...(dashboardItem ? [dashboardItem] : []),
     ];
 
@@ -120,80 +119,82 @@ export function Navbar({ user }: NavbarProps) {
                                 align="end"
                                 className="w-72 overflow-hidden rounded-2xl border bg-background p-0 shadow-xl"
                             >
-                                {/* User Header */}
-                                <div className="bg-linear-to-r from-primary/15 via-primary/10 to-primary/5 p-5">
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                                            <User className="size-6" />
-                                        </div>
+                                <DropdownMenuLabel>
+                                    {/* User Header */}
+                                    <div className="bg-linear-to-r from-primary/15 via-primary/10 to-primary/5 p-5">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex size-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                                                <User className="size-6" />
+                                            </div>
 
-                                        <div className="flex-1">
-                                            <h4 className="font-semibold text-sm">
-                                                {user?.data?.name || "User Name"}
-                                            </h4>
+                                            <div className="flex-1">
+                                                <h4 className="font-semibold text-sm">
+                                                    {user?.data?.name || "User Name"}
+                                                </h4>
 
-                                            <p className="text-xs text-muted-foreground">
-                                                {user?.data?.email || "user@email.com"}
-                                            </p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    {user?.data?.email || "user@email.com"}
+                                                </p>
 
-                                            <div className="mt-2 flex items-center gap-2">
-                                                <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium">
-                                                    {user?.data?.role || "User"}
-                                                </span>
-
-                                                {user?.data?.subscriptions?.status === "ACTIVE" && (
-                                                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-                                                        ✨ Premium
+                                                <div className="mt-2 flex items-center gap-2">
+                                                    <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium">
+                                                        {user?.data?.role || "User"}
                                                     </span>
-                                                )}
+
+                                                    {user?.data?.subscriptions?.status === "ACTIVE" && (
+                                                        <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                                                            ✨ Premium
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
+
+                                        {user?.data?.subscriptions?.status === "ACTIVE" && (
+                                            <div className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 shadow p-3">
+                                                <p className="text-xs font-medium text-emerald-700">
+                                                    Premium Membership
+                                                </p>
+
+                                                <p className="mt-1 text-xs">
+                                                    Renews on{" "}
+                                                    {new Date(
+                                                        user?.data?.subscriptions?.currentPeriodEnd
+                                                    ).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
 
-                                    {user?.data?.subscriptions?.status === "ACTIVE" && (
-                                        <div className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 shadow p-3">
-                                            <p className="text-xs font-medium text-emerald-700">
-                                                Premium Membership
-                                            </p>
-
-                                            <p className="mt-1 text-xs">
-                                                Renews on{" "}
-                                                {new Date(
-                                                    user?.data?.subscriptions?.currentPeriodEnd
-                                                ).toLocaleDateString()}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Menu Items */}
-                                <div className="p-2">
-                                    {userMenuItems.map((item) => (
-                                        <DropdownMenuItem
-                                            key={item.label}
-                                            asChild
-                                            className="rounded-lg"
-                                        >
-                                            <Link
-                                                href={item.href}
-                                                className="flex items-center gap-3"
+                                    {/* Menu Items */}
+                                    <div className="p-2">
+                                        {userMenuItems.map((item) => (
+                                            <DropdownMenuItem
+                                                key={item.label}
+                                                asChild
+                                                className="rounded-lg"
                                             >
-                                                <item.icon className="size-4" />
-                                                <span>{item.label}</span>
-                                            </Link>
+                                                <Link
+                                                    href={item.href}
+                                                    className="flex items-center gap-3"
+                                                >
+                                                    <item.icon className="size-4" />
+                                                    <span>{item.label}</span>
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        ))}
+
+                                        <DropdownMenuSeparator />
+
+                                        <DropdownMenuItem
+                                            onClick={() => handleLogout("logout")}
+                                            className="rounded-lg text-red-500 focus:text-red-500"
+                                        >
+                                            <LogOut className="size-4" />
+                                            <span>Logout</span>
                                         </DropdownMenuItem>
-                                    ))}
-
-                                    <DropdownMenuSeparator />
-
-                                    <DropdownMenuItem
-                                        onClick={() => handleLogout("logout")}
-                                        className="rounded-lg text-red-500 focus:text-red-500"
-                                    >
-                                        <LogOut className="size-4" />
-                                        <span>Logout</span>
-                                    </DropdownMenuItem>
-                                </div>
+                                    </div>
+                                </DropdownMenuLabel>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
